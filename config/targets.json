@@ -1,0 +1,36 @@
+{
+  "strategy": {
+    "primary_goal": "Grow high-quality, relevant referring domains; DA and DR are outcome metrics, not standalone targets.",
+    "max_contextual_links_per_article": 1,
+    "avoid_repetitive_exact_match_anchors": true,
+    "prefer_new_referring_domains": true,
+    "require_topic_relevance": true,
+    "canonical_url_policy": "Only set a canonical URL when the external article is a true republication of the canonical source. Do not use a target landing page as canonical for an independently written article."
+  },
+  "targets": [
+    {
+      "name": "AI Delegation Matrix",
+      "url": "https://www.forsatnet.ir/ai-management-delegation-matrix.html",
+      "topics": ["artificial intelligence", "management", "productivity", "automation"],
+      "priority": 10
+    },
+    {
+      "name": "Gold & Coin Prices",
+      "url": "https://price.forsatnet.ir/gold-coin-price.html",
+      "topics": ["gold", "inflation", "markets", "Iran economy"],
+      "priority": 8
+    },
+    {
+      "name": "Exchange Rates",
+      "url": "https://price.forsatnet.ir/exchange.html",
+      "topics": ["foreign exchange", "currency", "Iran economy", "business risk"],
+      "priority": 8
+    },
+    {
+      "name": "Car Prices",
+      "url": "https://price.forsatnet.ir/car-price.html",
+      "topics": ["automotive market", "pricing", "Iran economy", "consumer markets"],
+      "priority": 7
+    }
+  ]
+}
