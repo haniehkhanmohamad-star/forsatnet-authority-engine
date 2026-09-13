@@ -1,12 +1,20 @@
 {
   "id": "dev-001-ai-delegation-matrix",
   "platform": "devto",
-  "status": "ready",
+  "status": "published",
   "title": "Which Business Tasks Should You Delegate to AI? A Practical 2x2 Decision Matrix",
   "description": "A simple decision framework for managers choosing what to automate with AI and what to keep human-led.",
-  "tags": ["ai", "productivity", "management", "automation"],
+  "tags": [
+    "ai",
+    "productivity",
+    "management",
+    "automation"
+  ],
   "target_url": "https://www.forsatnet.ir/ai-management-delegation-matrix.html",
   "anchor_text": "a practical AI delegation matrix for managers",
   "article_path": "articles/001-ai-delegation-matrix.md",
-  "published": false
+  "published": true,
+  "dev_article_id": 4643472,
+  "published_url": "https://dev.to/hanieh_khanmohamad_d9d783/which-business-tasks-should-you-delegate-to-ai-a-practical-2x2-decision-matrix-127h",
+  "published_slug": "which-business-tasks-should-you-delegate-to-ai-a-practical-2x2-decision-matrix-127h"
 }
