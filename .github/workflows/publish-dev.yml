@@ -2,9 +2,12 @@ name: Publish queued article to DEV
 
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - 'queue/trigger-dev.txt'
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   publish:
@@ -31,3 +34,15 @@ jobs:
         env:
           DEVTO_API_KEY: ${{ secrets.DEVTO_API_KEY }}
         run: python scripts/publish_dev.py
+
+      - name: Persist publication state
+        run: |
+          if git diff --quiet -- queue/001-ai-delegation-matrix.json; then
+            echo "No queue state change to commit."
+            exit 0
+          fi
+          git config user.name "forsatnet-authority-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add queue/001-ai-delegation-matrix.json
+          git commit -m "Mark DEV article as published [skip ci]"
+          git push
