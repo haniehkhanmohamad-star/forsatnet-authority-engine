@@ -2,6 +2,7 @@ import json
 import os
 import pathlib
 import sys
+import urllib.error
 import urllib.request
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
@@ -21,11 +22,19 @@ def main():
     job = json.loads(QUEUE.read_text(encoding="utf-8"))
     if job.get("platform") != "devto":
         fail("Job platform is not devto.")
+    if job.get("status") != "ready":
+        fail(f"Job status is {job.get('status')!r}; expected 'ready'.")
     if job.get("published"):
-        fail("Job is already marked published; refusing duplicate publication.")
+        print("Job is already marked published. Nothing to do.")
+        return
 
     article_path = ROOT / job["article_path"]
     body_markdown = article_path.read_text(encoding="utf-8")
+
+    # DEV renders the API title separately, so avoid a duplicated H1 when the file starts with one.
+    first_line, sep, rest = body_markdown.partition("\n")
+    if first_line.startswith("# "):
+        body_markdown = rest.lstrip("\n") if sep else ""
 
     payload = {
         "article": {
@@ -44,7 +53,7 @@ def main():
             "api-key": api_key,
             "Content-Type": "application/json",
             "Accept": "application/vnd.forem.api-v1+json",
-            "User-Agent": "forsatnet-authority-engine/1.0",
+            "User-Agent": "forsatnet-authority-engine/1.1",
         },
         method="POST",
     )
@@ -52,12 +61,26 @@ def main():
     try:
         with urllib.request.urlopen(req, timeout=30) as response:
             result = json.loads(response.read().decode("utf-8"))
+    except urllib.error.HTTPError as exc:
+        detail = exc.read().decode("utf-8", errors="replace")
+        fail(f"DEV publication failed with HTTP {exc.code}: {detail}")
     except Exception as exc:
         fail(f"DEV publication failed: {exc}")
 
+    article_url = result.get("url")
+    if not article_url:
+        fail(f"DEV returned no article URL: {json.dumps(result, ensure_ascii=False)}")
+
+    job["published"] = True
+    job["status"] = "published"
+    job["dev_article_id"] = result.get("id")
+    job["published_url"] = article_url
+    job["published_slug"] = result.get("slug")
+    QUEUE.write_text(json.dumps(job, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
     output = {
         "id": result.get("id"),
-        "url": result.get("url"),
+        "url": article_url,
         "slug": result.get("slug"),
         "title": result.get("title"),
         "target_url": job.get("target_url"),
